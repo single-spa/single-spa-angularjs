@@ -1,0 +1,33 @@
+{
+  "name": "single-spa-register-angular1",
+  "version": "1.0.0",
+  "description": "the logic needed to register angular-ui-router apps with single-spa",
+  "main": "src/index.js",
+  "keywords": [
+    "single",
+    "spa",
+    "register",
+    "angular",
+    "angular1",
+    "multi",
+    "ui-router"
+  ],
+  "author": "Joel Denning",
+  "license": "MIT",
+  "dependencies": {
+    "babel": "^5.8.23"
+  },
+  "jspm": {
+    "directories": {
+      "baseURL": "examples/multiple-angular-versions/apps",
+      "packages": "examples/multiple-angular-versions/apps/1.2.0/jspm_packages"
+    },
+    "configFile": "examples/multiple-angular-versions/apps/1.2.0/config.js",
+    "dependencies": {},
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.22",
+      "babel-runtime": "npm:babel-runtime@^5.8.20",
+      "core-js": "npm:core-js@^1.1.0"
+    }
+  }
+}
