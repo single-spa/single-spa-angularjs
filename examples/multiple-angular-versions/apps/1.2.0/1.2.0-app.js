@@ -1,4 +1,3 @@
-import { constructApplication } from "single-spa";
 import * as registerHelpers from "single-spa-register-angular1";
 
 export default {
