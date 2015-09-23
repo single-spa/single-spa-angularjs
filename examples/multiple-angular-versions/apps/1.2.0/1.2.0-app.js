@@ -20,13 +20,13 @@ export default {
 	applicationWasMounted: registerHelpers.applicationWasMounted(),
 	applicationWillUnmount: registerHelpers.applicationWillUnmount(function() {
 		return new Promise(function(resolve) {
-			unhijackSystemLocate();
+			hijackSystemLocate();
 			resolve();
 		});
 	}),
 	unmountApplication: registerHelpers.unmountApplication(function() {
 		return new Promise(function(resolve) {
-			System.normalize = (name) => name;
+			unhijackSystemLocate();
 			resolve();
 		});
 	}),

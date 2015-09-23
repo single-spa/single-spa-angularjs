@@ -69,7 +69,7 @@ export function applicationWillUnmount(customPromise) {
 	}
 }
 
-export function unmountApplication() {
+export function unmountApplication(customPromise) {
 	return function() {
 		return new Promise((resolve) => {
 			System.import('angular')
@@ -77,7 +77,7 @@ export function unmountApplication() {
 				getRootScope(angular).$destroy();
 				document.querySelector('[single-spa-register-angular1-app]').remove();
 				delete window.angular;
-				resolve();
+				callCustomPromise(resolve, customPromise);
 			})
 		})
 	}
