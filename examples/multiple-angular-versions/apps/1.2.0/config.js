@@ -1,4 +1,5 @@
 System.config({
+  baseURL: '/apps/1.2.0',
   defaultJSExtensions: true,
   transpiler: "babel",
   babelOptions: {

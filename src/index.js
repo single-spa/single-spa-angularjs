@@ -22,6 +22,14 @@ export function entryWillBeInstalled(customPromise) {
 	}
 }
 
+export function entryWasInstalled(customPromise) {
+	return function() {
+		return new Promise(function(resolve) {
+			callCustomPromise(resolve, customPromise);
+		});
+	}
+}
+
 export function applicationWillMount(customPromise) {
 	return function() {
 		return new Promise(function(resolve) {
@@ -34,16 +42,17 @@ export function mountApplication(customPromise, angularModules) {
 	if (!Array.isArray(angularModules)) {
 		throw new Error(`The array of angular modules to bootstrap is required`);
 	}
-	return function() {
+	return function(elementToUse) {
 		return new Promise(function(resolve) {
 			System.import('angular')
 			.then((angular) => {
 				if (isUsingUIRouter(angular)) {
+					window.angular = angular;
 					let uiView = document.createElement('div');
 					uiView.setAttribute('ui-view', '');
 					uiView.setAttribute('single-spa-register-angular1-app', '');
-					document.body.appendChild(uiView);
-					angular.bootstrap(document.body, angularModules);
+					elementToUse.appendChild(uiView);
+					angular.bootstrap(elementToUse, angularModules);
 					callCustomPromise(resolve, customPromise);
 				} else {
 					throw new Error(`Angular apps not using ui-router are not yet supported`);
@@ -70,11 +79,11 @@ export function applicationWillUnmount(customPromise) {
 }
 
 export function unmountApplication(customPromise) {
-	return function() {
+	return function(bootstrappedElement) {
 		return new Promise((resolve) => {
 			System.import('angular')
 			.then((angular) => {
-				getRootScope(angular).$destroy();
+				getRootScope(angular, bootstrappedElement).$destroy();
 				document.querySelector('[single-spa-register-angular1-app]').remove();
 				delete window.angular;
 				callCustomPromise(resolve, customPromise);
@@ -99,8 +108,8 @@ export function activeApplicationSourceWasUpdated() {
 	}
 }
 
-function getRootScope(angular) {
-	return angular.element(document.body).scope().$root;
+function getRootScope(angular, bootstrappedElement) {
+	return angular.element(bootstrappedElement).scope().$root;
 }
 
 function isUsingUIRouter(angular) {

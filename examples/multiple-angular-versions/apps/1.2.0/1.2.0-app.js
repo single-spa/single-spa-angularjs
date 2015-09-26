@@ -1,33 +1,36 @@
 import * as registerHelpers from "single-spa-register-angular1";
 
+var nativeSystemGlobal;
+var appLoader;
+
 export default {
-	entry: '1.2.0-entry.js',
+	entry: '/apps/1.2.0/1.2.0-entry.js',
 	entryWillBeInstalled: registerHelpers.entryWillBeInstalled(function() {
 		return new Promise(function(resolve, reject) {
-			System.import('/apps/1.2.0/config.js').then(function() {
-				hijackSystemLocate();
-				resolve();
-			});
+			switchToAppLoader()
+			.then(() => window.System.import('/apps/1.2.0/config.js'))
+			.then(() => resolve());
 		});
+	}),
+	entryWasInstalled: registerHelpers.entryWasInstalled(function() {
+		return new Promise(function(resolve) {
+			switchToNativeLoader()
+			.then(() => resolve());
+		})
 	}),
 	applicationWillMount: registerHelpers.applicationWillMount(function() {
 		return new Promise(function(resolve) {
-			hijackSystemLocate();
-			resolve();
+			switchToAppLoader()
+			.then(() => resolve());
 		});
 	}),
 	mountApplication: registerHelpers.mountApplication(undefined, ['root-angular-module']),
 	applicationWasMounted: registerHelpers.applicationWasMounted(),
-	applicationWillUnmount: registerHelpers.applicationWillUnmount(function() {
-		return new Promise(function(resolve) {
-			hijackSystemLocate();
-			resolve();
-		});
-	}),
+	applicationWillUnmount: registerHelpers.applicationWillUnmount(),
 	unmountApplication: registerHelpers.unmountApplication(function() {
 		return new Promise(function(resolve) {
-			unhijackSystemLocate();
-			resolve();
+			switchToNativeLoader()
+			.then(() => resolve());
 		});
 	}),
 
@@ -35,30 +38,30 @@ export default {
 	activeApplicationSourceWasUpdated: registerHelpers.activeApplicationSourceWasUpdated()
 }
 
-var nativeSystemLocate;
-var hijacked = false;
-
-function hijackSystemLocate() {
-	if (!hijacked) {
-		nativeSystemLocate = System.locate;
-		hijacked = true;
-		System.locate = function(locationObj) {
-			let url = locationObj.name;
-			if (url.startsWith(this.baseURL)) {
-				let name = url.substring(this.baseURL.length);
-				if (name.startsWith('./')) {
-					return `/apps/1.2.0/${name.substring(2)}`;
-				} else {
-					return `/apps/1.2.0/${name}`;
-				}
+function switchToAppLoader() {
+	return new Promise((resolve) => {
+		if (!appLoader) {
+			nativeSystemGlobal = window.System;
+			delete window.System;
+			let scriptEl = document.createElement('script');
+			scriptEl.src = `/jspm_packages/system.src.js?1.2.0`;
+			scriptEl.async = true;
+			scriptEl.onreadystatechange = scriptEl.onload = function() {
+				appLoader = window.System;
+				resolve();
 			}
+			document.head.appendChild(scriptEl);
+		} else {
+			nativeSystemGlobal = window.System;
+			window.System = appLoader;
+			resolve();
 		}
-	}
+	})
 }
 
-function unhijackSystemLocate() {
-	if (hijacked) {
-		System.locate = nativeSystemLocate;
-		hijacked = false;
-	}
+function switchToNativeLoader() {
+	return new Promise((resolve) => {
+		window.System = nativeSystemGlobal;
+		resolve();
+	})
 }
