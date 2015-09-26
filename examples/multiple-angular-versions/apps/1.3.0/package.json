@@ -2,7 +2,7 @@
   "jspm": {
     "directories": {},
     "dependencies": {
-      "angular": "github:angular/bower-angular@1.2.0",
+      "angular": "github:angular/bower-angular@1.3.0",
       "angular-ui-router": "github:angular-ui/ui-router@0.2.8"
     },
     "devDependencies": {

@@ -4,11 +4,11 @@ var nativeSystemGlobal;
 var appLoader;
 
 export default {
-	entry: '/apps/1.4.5/1.4.5-entry.js',
+	entry: '/apps/1.4.6/1.4.6-entry.js',
 	entryWillBeInstalled: registerHelpers.entryWillBeInstalled(function() {
 		return new Promise(function(resolve, reject) {
 			switchToAppLoader()
-			.then(() => window.System.import('/apps/1.4.5/config.js'))
+			.then(() => window.System.import('/apps/1.4.6/config.js'))
 			.then(() => resolve());
 		});
 	}),
@@ -44,7 +44,7 @@ function switchToAppLoader() {
 			nativeSystemGlobal = window.System;
 			delete window.System;
 			let scriptEl = document.createElement('script');
-			scriptEl.src = `/jspm_packages/system.src.js?1.4.5`;
+			scriptEl.src = `/jspm_packages/system.src.js?1.4.6`;
 			scriptEl.async = true;
 			scriptEl.onreadystatechange = scriptEl.onload = function() {
 				appLoader = window.System;

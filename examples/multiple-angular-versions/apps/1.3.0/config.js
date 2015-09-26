@@ -1,5 +1,5 @@
 System.config({
-  baseURL: '/apps/1.4.5/',
+  baseURL: "/apps/1.3.0",
   defaultJSExtensions: true,
   transpiler: "babel",
   babelOptions: {
@@ -14,7 +14,7 @@ System.config({
   },
 
   map: {
-    "angular": "github:angular/bower-angular@1.4.6",
+    "angular": "github:angular/bower-angular@1.3.0",
     "angular-ui-router": "github:angular-ui/ui-router@0.2.8",
     "babel": "npm:babel-core@5.8.25",
     "babel-runtime": "npm:babel-runtime@5.8.24",
