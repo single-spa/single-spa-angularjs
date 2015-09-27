@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "the logic needed to register angular-ui-router apps with single-spa",
   "main": "src/single-spa-angular1.js",
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/"
+  },
   "keywords": [
     "single",
     "spa",
