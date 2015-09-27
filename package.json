@@ -6,6 +6,11 @@
   "publishConfig": {
     "registry": "http://registry.npmjs.org/"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joeldenning/single-spa-angular1.git"
+  },
+  "format": "es6",
   "keywords": [
     "single",
     "spa",
@@ -16,5 +21,9 @@
     "ui-router"
   ],
   "author": "Joel Denning",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joeldenning/single-spa-jspm/issues"
+  },
+  "homepage": "https://github.com/joeldenning/single-spa-jspm#readme"
 }
