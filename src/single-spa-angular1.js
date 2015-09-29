@@ -40,6 +40,9 @@ export function mountApplication(elementToUse) {
 	return new Promise(function(resolve) {
 		this.angularPromise()
 		.then(function (appAngular) {
+			if (!appAngular || !appAngular.module) {
+				throw new Error(`User application provided an angularPromise that did not return the angular object`);
+			}
 			var isUsingUIRouter;
 			try {
 				appAngular.module('ui.router');
