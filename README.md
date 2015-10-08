@@ -2,5 +2,8 @@
 
 Helper functions for registering angular 1 applications with https://github.com/joeldenning/single-spa
 
-## Known things that aren't supported
-1. putting ng-app on the html tag
+## Things that are supported
+- ng-app
+- xhr requests with $http
+- ng-src in your templates
+- templates that have <script>, <link>, and <img> tags
