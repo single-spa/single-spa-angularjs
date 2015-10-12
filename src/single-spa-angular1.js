@@ -48,6 +48,7 @@ export function scriptsWereLoaded() {
 	return new Promise(function(resolve) {
 		config.angularPromise()
 		.then(function(angular) {
+            config.jQuery = window.jQuery;
 			angular.module(config.rootAngularModule).directive('ngSrc', function () {
 				return {
 					restrict: 'A',
@@ -111,6 +112,7 @@ export function scriptsWereLoaded() {
 export function applicationWillMount() {
 	const config = this;
 	return new Promise(function (resolve) {
+        window.jQuery = config.jQuery;
 		resolve();
 	});
 }
@@ -145,6 +147,7 @@ export function applicationWillUnmount() {
 			let rootScope = angular.injector(['ng']).get('$rootScope');
 			rootScope.$destroy();
 			delete window.angular;
+            delete window.jQuery;
 			resolve()
 		})
 	})
