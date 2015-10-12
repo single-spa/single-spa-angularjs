@@ -127,7 +127,10 @@ export function applicationWasMounted() {
     return new Promise(function (resolve) {
         config.angularPromise()
         .then((angular) => {
+            //leak global
             window.angular = angular;
+
+            //bootstrap
             let element = config.rootElementGetter()
             let numMountsAutoMounted = document.querySelector('[ng-app]') ? 1 : 0;
             if (config.numMounts > numMountsAutoMounted) {
