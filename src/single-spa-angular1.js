@@ -133,6 +133,8 @@ export function applicationWasMounted() {
             if (config.numMounts > numMountsAutoMounted) {
                 //we need to bootstrap
                 angular.bootstrap(element, [config.rootAngularModule]);
+            } else if (document.documentElement.getAttribute('ng-app')) {
+                angular.bootstrap(element, [document.documentElement.getAttribute('ng-app')]);
             }
             resolve()
         })
