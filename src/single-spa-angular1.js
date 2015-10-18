@@ -20,12 +20,22 @@ export function defaultAngular1App(config) {
 export function scriptsWillBeLoaded() {
     const config = this;
     return new Promise(function (resolve) {
+        //In a SystemJS app, we need to transpile XHR responses
+        config.nativeXHRSend = XMLHttpRequest.prototype.send;
+        XMLHttpRequest.prototype.send = function() {
+            hijackLoaderTranslate(config);
+            config.nativeXHRSend.apply(this, arguments);
+        }
         resolve();
     });
 }
 
 export function scriptsWereLoaded() {
     var config = this;
+
+    //If it's a systemjs app, we are hopefully fine now that the loader translate hook has been hijacked
+    XMLHttpRequest.prototype.send = config.nativeXHRSend;
+
     let appAngular;
     function waitForAngularGlobal(callback) {
         if (appAngular) {
@@ -59,7 +69,7 @@ export function scriptsWereLoaded() {
                                 return;
                             }
                             if (value.indexOf(config.publicRoot) < 0) {
-                                attr.$set('ngSrc', prependUrl(config.publicRoot, value));
+                                attr.$set('ngSrc', window.singlespa.prependUrl(config.publicRoot, value));
                             }
                         })
                     }
@@ -69,7 +79,7 @@ export function scriptsWereLoaded() {
             angular.module(config.rootAngularModule).factory('SingleSpaPrefixURLsInterceptor', function() {
                 return {
                     request: function(requestConfig) {
-                        requestConfig.url = prependUrl(config.publicRoot, requestConfig.url);
+                        requestConfig.url = window.singlespa.prependUrl(config.publicRoot, requestConfig.url);
                         return requestConfig;
                     },
                     response: function(response) {
@@ -79,19 +89,19 @@ export function scriptsWereLoaded() {
                             let scripts = dom.querySelectorAll('script');
                             for (let i=0; i<scripts.length; i++) {
                                 if (scripts[i].getAttribute('src')) {
-                                    scripts[i].setAttribute('src', prependUrl(config.publicRoot, scripts[i].getAttribute('src')));
+                                    scripts[i].setAttribute('src', window.singlespa.prependUrl(config.publicRoot, scripts[i].getAttribute('src')));
                                 }
                             }
                             let stylesheets = dom.querySelectorAll('link');
                             for (let i=0; i<stylesheets.length; i++) {
                                 if (stylesheets[i].getAttribute('href')) {
-                                    stylesheets[i].setAttribute('href', prependUrl(config.publicRoot, stylesheet[i].getAttribute('href')));
+                                    stylesheets[i].setAttribute('href', window.singlespa.prependUrl(config.publicRoot, stylesheet[i].getAttribute('href')));
                                 }
                             }
                             let images = dom.querySelectorAll('img');
                             for (let i=0; i<images.length; i++) {
                                 if (images[i].getAttribute('src')) {
-                                    images[i].setAttribute('src', prependUrl(config.publicRoot, stylesheet[i].getAttribute('src')));
+                                    images[i].setAttribute('src', window.singlespa.prependUrl(config.publicRoot, stylesheet[i].getAttribute('src')));
                                 }
                             }
                             response.data = dom.documentElement.innerHTML;
@@ -179,12 +189,28 @@ export function activeApplicationSourceWasUpdated() {
     })
 }
 
-function prependUrl(prefix, url) {
-    let parsedURL = document.createElement('a');
-    parsedURL.href = url;
-    return `${parsedURL.protocol}//` + removeRedundantSlashes(`${parsedURL.hostname}:${parsedURL.port}/${prefix}/${parsedURL.pathname}${parsedURL.search}${parsedURL.hash}`);
-}
-
 function removeRedundantSlashes(str) {
     return str.replace(/[\/]+/g, '/');
+}
+
+function hijackLoaderTranslate(config) {
+    if (window.System && config.loaderTranslate !== window.System.translate) {
+        config.nativeLoaderTranslate = window.System.translate;
+        config.loaderTranslate = window.System.translate = function(load) {
+            var that = this;
+            return new Promise(function(resolve, reject) {
+                config.nativeLoaderTranslate.call(that, load)
+                .then((source) => {
+                    resolve(window.singlespa.transpile(source, config.publicRoot));
+                });
+            });
+        }
+    }
+}
+
+function unhijackLoaderTranslate(config) {
+    if (window.System) {
+        delete config.loaderTranslate;
+        window.System.translate = config.translate;
+    }
 }
