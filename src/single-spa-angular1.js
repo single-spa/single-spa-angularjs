@@ -20,11 +20,14 @@ export function defaultAngular1App(config) {
 export function scriptsWillBeLoaded() {
     const config = this;
     return new Promise(function (resolve) {
-        //In a SystemJS app, we need to transpile XHR responses
-        config.nativeXHRSend = XMLHttpRequest.prototype.send;
-        XMLHttpRequest.prototype.send = function() {
-            hijackLoaderTranslate(config);
-            config.nativeXHRSend.apply(this, arguments);
+        //single-spa owns the base tag, but angular doesn't like that much. This is the workaround.
+        config.nativeGetElementsByTagName = document.getElementsByTagName;
+        document.getElementsByTagName = function(query) {
+            if (query === 'base') {
+                return [];
+            } else {
+                return config.nativeGetElementsByTagName.apply(this, arguments);
+            }
         }
         resolve();
     });
@@ -32,9 +35,6 @@ export function scriptsWillBeLoaded() {
 
 export function scriptsWereLoaded() {
     var config = this;
-
-    //If it's a systemjs app, we are hopefully fine now that the loader translate hook has been hijacked
-    XMLHttpRequest.prototype.send = config.nativeXHRSend;
 
     let appAngular;
     function waitForAngularGlobal(callback) {
@@ -59,63 +59,20 @@ export function scriptsWereLoaded() {
         config.angularPromise()
         .then(function(angular) {
             config.jQuery = window.jQuery;
-            angular.module(config.rootAngularModule).directive('ngSrc', function () {
-                return {
-                    restrict: 'A',
-                    priority: 100, //Just higher than the real ngSrc
-                    link: function(scope, element, attr) {
-                        attr.$observe('ngSrc', function(value) {
-                            if (!value) {
-                                return;
-                            }
-                            if (value.indexOf(config.publicRoot) < 0) {
-                                attr.$set('ngSrc', window.singlespa.prependUrl(config.publicRoot, value));
-                            }
-                        })
-                    }
-                }
-            })
-
             angular.module(config.rootAngularModule).factory('SingleSpaPrefixURLsInterceptor', function() {
                 return {
                     request: function(requestConfig) {
                         requestConfig.url = window.singlespa.prependUrl(config.publicRoot, requestConfig.url);
                         return requestConfig;
-                    },
-                    response: function(response) {
-                        if (response.headers('Content-Type') === 'text/html') {
-                            let parser = new DOMParser();
-                            let dom = parser.parseFromString(response.data, 'text/html');
-                            let scripts = dom.querySelectorAll('script');
-                            for (let i=0; i<scripts.length; i++) {
-                                if (scripts[i].getAttribute('src')) {
-                                    scripts[i].setAttribute('src', window.singlespa.prependUrl(config.publicRoot, scripts[i].getAttribute('src')));
-                                }
-                            }
-                            let stylesheets = dom.querySelectorAll('link');
-                            for (let i=0; i<stylesheets.length; i++) {
-                                if (stylesheets[i].getAttribute('href')) {
-                                    stylesheets[i].setAttribute('href', window.singlespa.prependUrl(config.publicRoot, stylesheet[i].getAttribute('href')));
-                                }
-                            }
-                            let images = dom.querySelectorAll('img');
-                            for (let i=0; i<images.length; i++) {
-                                if (images[i].getAttribute('src')) {
-                                    images[i].setAttribute('src', window.singlespa.prependUrl(config.publicRoot, stylesheet[i].getAttribute('src')));
-                                }
-                            }
-                            response.data = dom.documentElement.innerHTML;
-                        }
-                        return response;
                     }
-                }
-            })
+                };
+            });
 
-            angular.module(config.rootAngularModule).config(function($httpProvider) {
+            angular.module(config.rootAngularModule).config(function($httpProvider, $locationProvider) {
                 $httpProvider.interceptors.push('SingleSpaPrefixURLsInterceptor');
-            })
+            });
             resolve();
-        })
+        });
     });
 }
 
@@ -123,6 +80,13 @@ export function applicationWillMount() {
     const config = this;
     return new Promise(function (resolve) {
         window.jQuery = config.jQuery;
+        document.getElementsByTagName = function(query) {
+            if (query === 'base') {
+                return [];
+            } else {
+                return config.nativeGetElementsByTagName.apply(this, arguments);
+            }
+        }
         resolve();
     });
 }
@@ -171,6 +135,7 @@ export function applicationWillUnmount() {
 export function applicationWasUnmounted() {
     const config = this;
     return new Promise(function (resolve) {
+        document.getElementsByTagName = config.nativeGetElementsByTagName;
         resolve();
     })
 }
@@ -191,26 +156,4 @@ export function activeApplicationSourceWasUpdated() {
 
 function removeRedundantSlashes(str) {
     return str.replace(/[\/]+/g, '/');
-}
-
-function hijackLoaderTranslate(config) {
-    if (window.System && config.loaderTranslate !== window.System.translate) {
-        config.nativeLoaderTranslate = window.System.translate;
-        config.loaderTranslate = window.System.translate = function(load) {
-            var that = this;
-            return new Promise(function(resolve, reject) {
-                config.nativeLoaderTranslate.call(that, load)
-                .then((source) => {
-                    resolve(window.singlespa.transpile(source, config.publicRoot));
-                });
-            });
-        }
-    }
-}
-
-function unhijackLoaderTranslate(config) {
-    if (window.System) {
-        delete config.loaderTranslate;
-        window.System.translate = config.translate;
-    }
 }
