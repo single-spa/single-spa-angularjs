@@ -72,6 +72,9 @@ export function scriptsWereLoaded() {
                 $httpProvider.interceptors.push('SingleSpaPrefixURLsInterceptor');
             });
             resolve();
+        })
+        .catch((ex) => {
+            throw ex;
         });
     });
 }
@@ -115,6 +118,9 @@ export function applicationWasMounted() {
             }
             resolve()
         })
+        .catch((ex) => {
+            throw ex;
+        });
     });
 }
 
@@ -129,6 +135,9 @@ export function applicationWillUnmount() {
             delete window.jQuery;
             resolve()
         })
+        .catch((ex) => {
+            throw ex;
+        });
     })
 }
 
