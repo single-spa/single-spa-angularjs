@@ -1,6 +1,6 @@
 {
   "name": "single-spa-angular1",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "the logic needed to register angular-ui-router apps with single-spa",
   "main": "dist/single-spa-angular1.dist.js",
   "publishConfig": {
