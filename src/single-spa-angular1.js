@@ -12,8 +12,6 @@ export function defaultAngular1App(config) {
     app.applicationWasMounted = function() { return applicationWasMounted.apply(config, arguments); }
     app.applicationWillUnmount = function() { return applicationWillUnmount.apply(config, arguments); }
     app.applicationWasUnmounted = function() { return applicationWasUnmounted.apply(config, arguments); }
-    app.activeApplicationSourceWillUpdate = function() { return activeApplicationSourceWillUpdate.apply(config, arguments); }
-    app.activeApplicationSourceWasUpdated = function() { return activeApplicationSourceWasUpdated.apply(config, arguments); }
     return app;
 }
 
@@ -145,20 +143,6 @@ export function applicationWasUnmounted() {
     const config = this;
     return new Promise(function (resolve) {
         document.getElementsByTagName = config.nativeGetElementsByTagName;
-        resolve();
-    })
-}
-
-export function activeApplicationSourceWillUpdate() {
-    const config = this;
-    return new Promise(function (resolve) {
-        resolve();
-    })
-}
-
-export function activeApplicationSourceWasUpdated() {
-    const config = this;
-    return new Promise(function (resolve) {
         resolve();
     })
 }
