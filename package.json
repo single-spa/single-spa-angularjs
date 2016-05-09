@@ -3,9 +3,6 @@
   "version": "2.0.0",
   "description": "the logic needed to register angular-ui-router apps with single-spa",
   "main": "lib/single-spa-angular1.js",
-  "publishConfig": {
-    "registry": "http://registry.npmjs.org/"
-  },
   "scripts": {
     "build": "babel src --out-dir lib",
     "prepublish": "npm run build"
