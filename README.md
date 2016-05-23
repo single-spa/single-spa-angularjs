@@ -12,7 +12,7 @@ import angular from 'angular';
 
 const ng1Lifecycles = singleSpaAngular1({
   angular: angular,
-  domElementGetter: document.getElementById('main-content'),
+  domElementGetter: () => document.getElementById('main-content'),
   mainAngularModule: 'app',
   uiRouter: true,
 });
