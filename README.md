@@ -1,6 +1,6 @@
 # single-spa-angular1
 
-Generic lifecycle hooks for angular 1 applications that are registered as [child applications](https://github.com/CanopyTax/single-spa/blob/docs-1/docs/configuring-child-applications.md) of [single-spa](https://github.com/CanopyTax/single-spa).
+Generic lifecycle hooks for angular 1 applications that are registered as [child applications](https://github.com/CanopyTax/single-spa/blob/master/docs/child-applications.md) of [single-spa](https://github.com/CanopyTax/single-spa).
 
 ## Quickstart
 
