@@ -15,6 +15,7 @@ const ng1Lifecycles = singleSpaAngular1({
   domElementGetter: () => document.getElementById('main-content'),
   mainAngularModule: 'app',
   uiRouter: true,
+	preserveGlobal: false
 });
 
 export const bootstrap = [
@@ -38,3 +39,4 @@ All options are passed to single-spa-angular1 via the `opts` parameter when call
 - `domElementGetter`: (required) A function that takes in no arguments and returns a DOMElement. This dom element is where the angular application will be bootstrapped, mounted, and unmounted.
 - `mainAngularModule`: (required) A string that is the name of the angular module that will be bootstrapped by angular. See [angular docs](https://docs.angularjs.org/api/ng/function/angular.bootstrap) for `angular.bootstrap()`.
 - `uiRouter`: (optional) A boolean that defaults to false. Set this to true if you are using [angular-ui-router](https://github.com/angular-ui/ui-router). This will ensure that `ui-view` elements will be part of the bootstrap process so that ui-router will actually work.
+- `preserveGlobal`: (optional) A boolean that defaults to false. Set if you want to keep angular on the global even after an app unmounts.
