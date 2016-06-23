@@ -8,6 +8,7 @@ const defaultOpts = {
 
 	// optional opts
 	uiRouter: false,
+	preserveGlobal: false,
 };
 
 export default function singleSpaAngular1(userOpts) {
@@ -72,7 +73,7 @@ function unmount() {
 
 		getContainerEl().innerHTML = '';
 
-		if (opts.angular === window.angular)
+		if (opts.angular === window.angular && !opts.preserveGlobal)
 			delete window.angular;
 
 		setTimeout(resolve);
