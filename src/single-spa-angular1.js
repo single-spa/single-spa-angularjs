@@ -9,6 +9,7 @@ const defaultOpts = {
 	// optional opts
 	uiRouter: false,
 	preserveGlobal: false,
+	elementId: '__single_spa_angular_1',
 };
 
 export default function singleSpaAngular1(userOpts) {
@@ -52,6 +53,8 @@ function mount() {
 
 		const containerEl = getContainerEl();
 		const bootstrapEl = document.createElement('div');
+		bootstrapEl.id = opts.elementId;
+
 		containerEl.appendChild(bootstrapEl);
 
 		if (opts.uiRouter) {
@@ -68,7 +71,9 @@ function mount() {
 
 function unmount() {
 	return new Promise((resolve, reject) => {
-		let rootScope = angular.injector(['ng']).get('$rootScope');
+		let rootElement = angular.element(getContainerEl().querySelector(`#${opts.elementId}`));
+		let rootScope = rootElement.injector().get('$rootScope');
+
 		const result = rootScope.$destroy();
 
 		getContainerEl().innerHTML = '';
