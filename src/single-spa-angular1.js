@@ -11,6 +11,8 @@ const defaultOpts = {
 	preserveGlobal: false,
 };
 
+const SINGLE_SPA_ELEMENT_ID = '__single_spa_angular_1';
+
 export default function singleSpaAngular1(userOpts) {
 	if (typeof userOpts !== 'object') {
 		throw new Error(`single-spa-angular1 requires a configuration object`);
@@ -52,6 +54,8 @@ function mount() {
 
 		const containerEl = getContainerEl();
 		const bootstrapEl = document.createElement('div');
+		bootstrapEl.id = SINGLE_SPA_ELEMENT_ID;
+
 		containerEl.appendChild(bootstrapEl);
 
 		if (opts.uiRouter) {
@@ -68,7 +72,7 @@ function mount() {
 
 function unmount() {
 	return new Promise((resolve, reject) => {
-		let rootElement = angular.element(getContainerEl().childNodes[0]);
+		let rootElement = angular.element(getContainerEl().querySelector(`#${SINGLE_SPA_ELEMENT_ID}`));
 		let rootScope = rootElement.injector().get('$rootScope');
 
 		const result = rootScope.$destroy();
