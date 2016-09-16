@@ -1,5 +1,3 @@
-let opts;
-
 const defaultOpts = {
 	// required opts
 	angular: null,
@@ -17,7 +15,7 @@ export default function singleSpaAngular1(userOpts) {
 		throw new Error(`single-spa-angular1 requires a configuration object`);
 	}
 
-	opts = {
+	const opts = {
 		...defaultOpts,
 		...userOpts,
 	};
@@ -35,23 +33,23 @@ export default function singleSpaAngular1(userOpts) {
 	}
 
 	return {
-		bootstrap,
-		mount,
-		unmount,
+		bootstrap: bootstrap.bind(null, opts),
+		mount: mount.bind(null, opts),
+		unmount: unmount.bind(null, opts),
 	};
 }
 
-function bootstrap() {
+function bootstrap(opts) {
 	return new Promise((resolve, reject) => {
 		resolve();
 	});
 }
 
-function mount() {
+function mount(opts) {
 	return new Promise((resolve, reject) => {
 		window.angular = opts.angular;
 
-		const containerEl = getContainerEl();
+		const containerEl = getContainerEl(opts);
 		const bootstrapEl = document.createElement('div');
 		bootstrapEl.id = opts.elementId;
 
@@ -69,14 +67,14 @@ function mount() {
 	});
 }
 
-function unmount() {
+function unmount(opts) {
 	return new Promise((resolve, reject) => {
 		let rootElement = angular.element(getContainerEl().querySelector(`#${opts.elementId}`));
 		let rootScope = rootElement.injector().get('$rootScope');
 
 		const result = rootScope.$destroy();
 
-		getContainerEl().innerHTML = '';
+		getContainerEl(opts).innerHTML = '';
 
 		if (opts.angular === window.angular && !opts.preserveGlobal)
 			delete window.angular;
@@ -85,7 +83,7 @@ function unmount() {
 	});
 }
 
-function getContainerEl() {
+function getContainerEl(opts) {
 	const element = opts.domElementGetter();
 	if (!element) {
 		throw new Error(`domElementGetter did not return a valid dom element`);
