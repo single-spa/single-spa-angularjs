@@ -69,7 +69,7 @@ function mount(opts) {
 
 function unmount(opts) {
 	return new Promise((resolve, reject) => {
-		let rootElement = angular.element(getContainerEl().querySelector(`#${opts.elementId}`));
+		let rootElement = angular.element(getContainerEl(opts).querySelector(`#${opts.elementId}`));
 		let rootScope = rootElement.injector().get('$rootScope');
 
 		const result = rootScope.$destroy();
