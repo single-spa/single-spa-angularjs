@@ -4,7 +4,7 @@ Generic lifecycle hooks for angular 1 applications that are registered as [child
 
 ## Examples
 
-In addition to the Readme here, example usage of single-spa-angular1 can be found in the [single-spa-examples](https://github.com/CanopyTax/single-spa-examples/blob/master/src/angular1/angular1.app.js) project.
+In addition to this Readme, example usage of single-spa-angular1 can be found in the [single-spa-examples](https://github.com/CanopyTax/single-spa-examples/blob/master/src/angular1/angular1.app.js) project.
 
 ## Quickstart
 
