@@ -37,7 +37,7 @@ export const unmount = [
 
 ## Options
 
-All options are passed to single-spa-angular1 via the `opts` parameter when calling `singleSpaAngular1(opts)`. The following options are available:
+Most options are passed to single-spa-angular1 via the `opts` parameter when calling `singleSpaAngular1(opts)`. The following options are available:
 
 - `angular`: (required) The main angular object, which is generally either exposed onto the window or is available via `require('angular')` or `import angular from 'angular'`.
 - `domElementGetter`: (required) A function that takes in no arguments and returns a DOMElement. This dom element is where the angular application will be bootstrapped, mounted, and unmounted.
@@ -45,3 +45,5 @@ All options are passed to single-spa-angular1 via the `opts` parameter when call
 - `uiRouter`: (optional) A boolean that defaults to false. Set this to true if you are using [angular-ui-router](https://github.com/angular-ui/ui-router). This will ensure that `ui-view` elements will be part of the bootstrap process so that ui-router will actually work.
 - `preserveGlobal`: (optional) A boolean that defaults to false. Set if you want to keep angular on the global even after an app unmounts.
 - `elementId`: (optional) A string which will be used to identify the element appended to the DOM and bootstrapped by Angular.
+
+Additionally you can pass a `bootstrapConfigurationObject` [Bootstrap Usage](https://docs.angularjs.org/api/ng/function/angular.bootstrap#usage) directly to the method that calls `angular.bootstrap`
