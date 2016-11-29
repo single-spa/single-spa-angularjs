@@ -8,6 +8,7 @@ const defaultOpts = {
 	uiRouter: false,
 	preserveGlobal: false,
 	elementId: '__single_spa_angular_1',
+	strictDi: false,
 };
 
 export default function singleSpaAngular1(userOpts) {
@@ -60,8 +61,12 @@ function mount(opts) {
 			uiViewEl.setAttribute('ui-view', '');
 			bootstrapEl.appendChild(uiViewEl);
 		}
-
-		opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule])
+		
+		if (opts.strictDi) {
+			opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule], {strictDi: opts.strictDi})
+		} else {
+			opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule])
+		}
 
 		resolve();
 	});
