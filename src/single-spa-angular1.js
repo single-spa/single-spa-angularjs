@@ -10,7 +10,7 @@ const defaultOpts = {
 	elementId: '__single_spa_angular_1',
 };
 
-export default function singleSpaAngular1(userOpts) {
+export default function singleSpaAngular1(userOpts, bootstrapConfig) {
 	if (typeof userOpts !== 'object') {
 		throw new Error(`single-spa-angular1 requires a configuration object`);
 	}
@@ -34,7 +34,7 @@ export default function singleSpaAngular1(userOpts) {
 
 	return {
 		bootstrap: bootstrap.bind(null, opts),
-		mount: mount.bind(null, opts),
+		mount: mount.bind(null, opts, bootstrapConfig),
 		unmount: unmount.bind(null, opts),
 	};
 }
@@ -45,7 +45,7 @@ function bootstrap(opts) {
 	});
 }
 
-function mount(opts) {
+function mount(opts, bootstrapConfig) {
 	return new Promise((resolve, reject) => {
 		window.angular = opts.angular;
 
@@ -61,7 +61,11 @@ function mount(opts) {
 			bootstrapEl.appendChild(uiViewEl);
 		}
 
-		opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule])
+		if (!!bootstrapConfig) {
+			opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule], bootstrapConfig)	
+		} else {
+			opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule])
+		}
 
 		resolve();
 	});
