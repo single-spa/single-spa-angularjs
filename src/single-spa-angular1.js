@@ -33,10 +33,13 @@ export default function singleSpaAngular1(userOpts) {
 		throw new Error(`single-spa-angular1 must be passed opts.mainAngularModule string`);
 	}
 
+	// A shared object to store mounted object state
+	const mountedInstances = {};
+
 	return {
-		bootstrap: bootstrap.bind(null, opts),
-		mount: mount.bind(null, opts),
-		unmount: unmount.bind(null, opts),
+		bootstrap: bootstrap.bind(null, opts, mountedInstances),
+		mount: mount.bind(null, opts, mountedInstances),
+		unmount: unmount.bind(null, opts, mountedInstances),
 	};
 }
 
@@ -46,7 +49,7 @@ function bootstrap(opts) {
 	});
 }
 
-function mount(opts) {
+function mount(opts, mountedInstances) {
 	return new Promise((resolve, reject) => {
 		window.angular = opts.angular;
 
@@ -63,22 +66,18 @@ function mount(opts) {
 		}
 		
 		if (opts.strictDi) {
-			opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule], {strictDi: opts.strictDi})
+			mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule], {strictDi: opts.strictDi})
 		} else {
-			opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule])
+			mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule])
 		}
 
 		resolve();
 	});
 }
 
-function unmount(opts) {
+function unmount(opts, mountedInstances) {
 	return new Promise((resolve, reject) => {
-		let rootElement = angular.element(getContainerEl(opts).querySelector(`#${opts.elementId}`));
-		let rootScope = rootElement.injector().get('$rootScope');
-
-		const result = rootScope.$destroy();
-
+		mountedInstances.instance.get('$rootScope').$destroy();
 		getContainerEl(opts).innerHTML = '';
 
 		if (opts.angular === window.angular && !opts.preserveGlobal)
