@@ -9,6 +9,7 @@ const defaultOpts = {
 	preserveGlobal: false,
 	elementId: '__single_spa_angular_1',
 	strictDi: false,
+	template: undefined,
 };
 
 export default function singleSpaAngular1(userOpts) {
@@ -44,34 +45,36 @@ export default function singleSpaAngular1(userOpts) {
 }
 
 function bootstrap(opts) {
-	return new Promise((resolve, reject) => {
-		resolve();
-	});
+	return Promise.resolve();
 }
 
 function mount(opts, mountedInstances) {
-	return new Promise((resolve, reject) => {
-		window.angular = opts.angular;
+	return Promise
+		.resolve()
+		.then(() => {
+			window.angular = opts.angular;
 
-		const containerEl = getContainerEl(opts);
-		const bootstrapEl = document.createElement('div');
-		bootstrapEl.id = opts.elementId;
+			const containerEl = getContainerEl(opts);
+			const bootstrapEl = document.createElement('div');
+			bootstrapEl.id = opts.elementId;
 
-		containerEl.appendChild(bootstrapEl);
+			containerEl.appendChild(bootstrapEl);
 
-		if (opts.uiRouter) {
-			const uiViewEl = document.createElement('div');
-			uiViewEl.setAttribute('ui-view', '');
-			bootstrapEl.appendChild(uiViewEl);
-		}
-		
-		if (opts.strictDi) {
-			mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule], {strictDi: opts.strictDi})
-		} else {
-			mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule])
-		}
+			if (opts.uiRouter) {
+				const uiViewEl = document.createElement('div');
+				uiViewEl.setAttribute('ui-view', '');
+				bootstrapEl.appendChild(uiViewEl);
+			}
 
-		resolve();
+			if (opts.template) {
+				bootstrapEl.innerHTML = opts.template;
+			}
+			
+			if (opts.strictDi) {
+				mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule], {strictDi: opts.strictDi})
+			} else {
+				mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule])
+			}
 	});
 }
 
