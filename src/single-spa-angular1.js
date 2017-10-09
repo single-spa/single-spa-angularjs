@@ -62,14 +62,14 @@ function mount(opts, mountedInstances) {
 
 			if (opts.uiRouter) {
 				const uiViewEl = document.createElement('div');
-				uiViewEl.setAttribute('ui-view', '');
+				uiViewEl.setAttribute('ui-view', opts.uiRouter === true ? "" : opts.uiRouter);
 				bootstrapEl.appendChild(uiViewEl);
 			}
 
 			if (opts.template) {
 				bootstrapEl.innerHTML = opts.template;
 			}
-			
+
 			if (opts.strictDi) {
 				mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule], {strictDi: opts.strictDi})
 			} else {
