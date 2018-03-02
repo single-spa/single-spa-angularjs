@@ -1,6 +1,6 @@
 # single-spa-angular1
 
-Generic lifecycle hooks for angular 1 applications that are registered as [child applications](https://github.com/CanopyTax/single-spa/blob/master/docs/child-applications.md) of [single-spa](https://github.com/CanopyTax/single-spa).
+Generic lifecycle hooks for angular 1 applications that are registered as [single-spa applications](https://github.com/CanopyTax/single-spa/blob/master/docs/applications.md#registered-applications) of [single-spa](https://github.com/CanopyTax/single-spa).
 
 ## Examples
 
@@ -8,7 +8,7 @@ In addition to this Readme, example usage of single-spa-angular1 can be found in
 
 ## Quickstart
 
-First, in the child application, run `npm install --save single-spa-angular1` (or `jspm install npm:single-spa-angular1` if your child application is managed by jspm). Then, in your [child app's entry file](https://github.com/CanopyTax/single-spa/blob/docs-1/docs/configuring-child-applications.md#the-entry-file), do the following:
+First, in the [single-spa application](https://github.com/CanopyTax/single-spa/blob/master/docs/applications.md#registered-applications), run `npm install --save single-spa-angular1`. Then, create an entry file for the application:
 
 ```js
 import singleSpaAngular1 from 'single-spa-angular1';
