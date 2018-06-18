@@ -8,7 +8,10 @@ In addition to this Readme, example usage of single-spa-angular1 can be found in
 
 ## Quickstart
 
-First, in the [single-spa application](https://github.com/CanopyTax/single-spa/blob/master/docs/applications.md#registered-applications), run `npm install --save single-spa-angular1`. Then, create an entry file for the application:
+First, in the [single-spa application](https://github.com/CanopyTax/single-spa/blob/master/docs/applications.md#registered-applications), run `npm install --save single-spa-angular1`. Note that you can
+alternatively `<script src="https://unpkg.com/single-spa-angular1"></script>` and access the library via the `singleSpaAngular1` global variable if that is easier for you.
+
+Then, create an entry file for the application:
 
 ```js
 import singleSpaAngular1 from 'single-spa-angular1';
