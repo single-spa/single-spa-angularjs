@@ -4,7 +4,7 @@
   "description": "the logic needed to register angular 1 apps with single-spa",
   "main": "lib/single-spa-angular1.js",
   "scripts": {
-    "build": "babel src --out-dir lib --source-maps",
+    "build": "rimraf lib && babel src --out-dir lib --source-maps",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -14,21 +14,20 @@
   "keywords": [
     "single",
     "spa",
-    "angular",
-    "angular1",
-    "multi",
+    "angularjs",
     "ui-router"
   ],
   "author": "Joel Denning",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joeldenning/single-spa-jspm/issues"
+    "url": "https://github.com/joeldenning/single-spa-angular1/issues"
   },
-  "homepage": "https://github.com/joeldenning/single-spa-jspm#readme",
+  "homepage": "https://github.com/joeldenning/single-spa-angular1#readme",
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.19.0",
-    "babel-preset-es2015": "^6.18.0"
+    "babel-preset-es2015": "^6.18.0",
+    "rimraf": "^2.6.2"
   }
 }
