@@ -1,23 +1,23 @@
-# single-spa-angular1
+# single-spa-angularjs
 
-Generic lifecycle hooks for angular 1 applications that are registered as [single-spa applications](https://github.com/CanopyTax/single-spa/blob/master/docs/applications.md#registered-applications) of [single-spa](https://github.com/CanopyTax/single-spa).
+Generic lifecycle hooks for AngularJS (Angular 1) applications that are registered as [single-spa applications](https://github.com/CanopyTax/single-spa/blob/master/docs/applications.md#registered-applications) of [single-spa](https://github.com/CanopyTax/single-spa).
 
 ## Examples
 
-In addition to this Readme, example usage of single-spa-angular1 can be found in the [single-spa-examples](https://github.com/CanopyTax/single-spa-examples/blob/master/src/angular1/angular1.app.js) project.
+In addition to this Readme, example usage of single-spa-angularjs can be found in the [single-spa-examples](https://github.com/CanopyTax/single-spa-examples/blob/master/src/angular1/angular1.app.js) project.
 
 ## Quickstart
 
-First, in the [single-spa application](https://github.com/CanopyTax/single-spa/blob/master/docs/applications.md#registered-applications), run `npm install --save single-spa-angular1`. Note that you can
-alternatively `<script src="https://unpkg.com/single-spa-angular1"></script>` and access the library via the `singleSpaAngular1` global variable if that is easier for you.
+First, in the [single-spa application](https://github.com/CanopyTax/single-spa/blob/master/docs/applications.md#registered-applications), run `npm install --save single-spa-angularjs`. Note that you can
+alternatively `<script src="https://unpkg.com/single-spa-angularjs"></script>` and access the library via the `singleSpaAngularjs` global variable if that is easier for you.
 
 Then, create an entry file for the application:
 
 ```js
-import singleSpaAngular1 from 'single-spa-angular1';
+import singleSpaAngularJS from 'single-spa-angularjs';
 import angular from 'angular';
 
-const ng1Lifecycles = singleSpaAngular1({
+const ngLifecycles = singleSpaAngularJS({
   angular: angular,
   domElementGetter: () => document.getElementById('main-content'),
   mainAngularModule: 'app',
@@ -27,15 +27,15 @@ const ng1Lifecycles = singleSpaAngular1({
 });
 
 export const bootstrap = [
-  ng1Lifecycles.bootstrap,
+  ngLifecycles.bootstrap,
 ];
 
 export const mount = [
-  ng1Lifecycles.mount,
+  ngLifecycles.mount,
 ];
 
 export const unmount = [
-  ng1Lifecycles.unmount,
+  ngLifecycles.unmount,
 ];
 ```
 
@@ -44,7 +44,7 @@ Check out [this example repo](https://github.com/joeldenning/single-spa-es5-angu
 
 ## Options
 
-All options are passed to single-spa-angular1 via the `opts` parameter when calling `singleSpaAngular1(opts)`. The following options are available:
+All options are passed to single-spa-angularjs via the `opts` parameter when calling `singleSpaAngularJS(opts)`. The following options are available:
 
 - `angular`: (required) The main angular object, which is generally either exposed onto the window or is available via `require('angular')` or `import angular from 'angular'`.
 - `domElementGetter`: (required) A function that takes in no arguments and returns a DOMElement. This dom element is where the angular application will be bootstrapped, mounted, and unmounted.

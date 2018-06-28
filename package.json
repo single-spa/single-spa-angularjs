@@ -2,14 +2,14 @@
   "name": "single-spa-angularjs",
   "version": "3.0.0",
   "description": "the logic needed to register angular 1 apps with single-spa",
-  "main": "lib/single-spa-angular1.js",
+  "main": "lib/single-spa-angularjs.js",
   "scripts": {
     "build": "rimraf lib && babel src --out-dir lib --source-maps",
     "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joeldenning/single-spa-angular1.git"
+    "url": "git+https://github.com/joeldenning/single-spa-angularjs.git"
   },
   "keywords": [
     "single",
@@ -20,9 +20,9 @@
   "author": "Joel Denning",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joeldenning/single-spa-angular1/issues"
+    "url": "https://github.com/joeldenning/single-spa-angularjs/issues"
   },
-  "homepage": "https://github.com/joeldenning/single-spa-angular1#readme",
+  "homepage": "https://github.com/joeldenning/single-spa-angularjs#readme",
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",

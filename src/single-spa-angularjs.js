@@ -12,9 +12,9 @@ const defaultOpts = {
   template: undefined,
 };
 
-export default function singleSpaAngular1(userOpts) {
+export default function singleSpaAngularJS(userOpts) {
   if (typeof userOpts !== 'object') {
-    throw new Error(`single-spa-angular1 requires a configuration object`);
+    throw new Error(`single-spa-angularjs requires a configuration object`);
   }
 
   const opts = {
@@ -23,15 +23,15 @@ export default function singleSpaAngular1(userOpts) {
   };
 
   if (!opts.angular) {
-    throw new Error(`single-spa-angular1 must be passed opts.angular`);
+    throw new Error(`single-spa-angularjs must be passed opts.angular`);
   }
 
   if (!opts.domElementGetter) {
-    throw new Error(`single-spa-angular1 must be passed opts.domElementGetter function`);
+    throw new Error(`single-spa-angularjs must be passed opts.domElementGetter function`);
   }
 
   if (!opts.mainAngularModule) {
-    throw new Error(`single-spa-angular1 must be passed opts.mainAngularModule string`);
+    throw new Error(`single-spa-angularjs must be passed opts.mainAngularModule string`);
   }
 
   // A shared object to store mounted object state
