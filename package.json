@@ -1,5 +1,5 @@
 {
-  "name": "single-spa-angular1",
+  "name": "single-spa-angularjs",
   "version": "2.7.0",
   "description": "the logic needed to register angular 1 apps with single-spa",
   "main": "lib/single-spa-angular1.js",
