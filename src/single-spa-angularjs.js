@@ -26,8 +26,8 @@ export default function singleSpaAngularJS(userOpts) {
     throw new Error(`single-spa-angularjs must be passed opts.angular`);
   }
 
-  if (!opts.domElementGetter) {
-    throw new Error(`single-spa-angularjs must be passed opts.domElementGetter function`);
+  if (opts.domElementGetter && typeof opts.domElementGetter !== 'function') {
+    throw new Error(`single-spa-angularjs opts.domElementGetter must be a function`);
   }
 
   if (!opts.mainAngularModule) {
@@ -48,13 +48,13 @@ function bootstrap(opts) {
   return Promise.resolve();
 }
 
-function mount(opts, mountedInstances) {
+function mount(opts, mountedInstances, props = {}) {
   return Promise
     .resolve()
     .then(() => {
       window.angular = opts.angular;
 
-      const containerEl = getContainerEl(opts);
+      const containerEl = getContainerEl(opts, props);
       const bootstrapEl = document.createElement('div');
       bootstrapEl.id = opts.elementId;
 
@@ -78,10 +78,10 @@ function mount(opts, mountedInstances) {
   });
 }
 
-function unmount(opts, mountedInstances) {
+function unmount(opts, mountedInstances, props = {}) {
   return new Promise((resolve, reject) => {
     mountedInstances.instance.get('$rootScope').$destroy();
-    getContainerEl(opts).innerHTML = '';
+    getContainerEl(opts, props).innerHTML = '';
 
     if (opts.angular === window.angular && !opts.preserveGlobal)
       delete window.angular;
@@ -90,8 +90,20 @@ function unmount(opts, mountedInstances) {
   });
 }
 
-function getContainerEl(opts) {
-  const element = opts.domElementGetter();
+function getContainerEl(opts, props) {
+  let element;
+  if (opts.domElementGetter) {
+    element = opts.domElementGetter()
+  } else {
+    const htmlId = `single-spa-application:${props.name || props.appName}`
+    element = document.getElementById(htmlId)
+    if (!element) {
+      element = document.createElement('div')
+      element.id = htmlId
+      document.body.appendChild(element)
+    }
+  }
+
   if (!element) {
     throw new Error(`domElementGetter did not return a valid dom element`);
   }
