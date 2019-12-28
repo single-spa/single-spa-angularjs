@@ -45,7 +45,7 @@ export default function singleSpaAngularJS(userOpts) {
 }
 
 function bootstrap(opts) {
-  return Promise.resolve();
+  return opts.beforeBootstrap ?  opts.beforeBootstrap() : Promise.resolve(); // Enable Custom Bootstrap.
 }
 
 function mount(opts, mountedInstances, props = {}) {
