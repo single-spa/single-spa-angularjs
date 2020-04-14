@@ -86,6 +86,8 @@ function mount(opts, mountedInstances, props = {}) {
         opts.mainAngularModule,
       ]);
     }
+
+    mountedInstances.instance.get("$rootScope").singleSpaProps = props;
   });
 }
 
