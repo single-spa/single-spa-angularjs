@@ -4,8 +4,14 @@
   "description": "the logic needed to register angular 1 apps with single-spa",
   "main": "lib/single-spa-angularjs.js",
   "scripts": {
+    "format": "prettier './**/*' --write",
     "build": "rimraf lib && babel src --out-dir lib --source-maps",
     "prepublishOnly": "yarn build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "repository": {
     "type": "git",
@@ -24,11 +30,14 @@
   },
   "homepage": "https://github.com/single-spa/single-spa-angularjs#readme",
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-transform-modules-umd": "^7.2.0",
-    "@babel/preset-env": "^7.5.5",
-    "rimraf": "^2.6.2"
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-modules-umd": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "husky": "^4.2.5",
+    "prettier": "^2.0.4",
+    "pretty-quick": "^2.0.1",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {}
 }

@@ -7,13 +7,13 @@ const defaultOpts = {
   // optional opts
   uiRouter: false,
   preserveGlobal: false,
-  elementId: '__single_spa_angular_1',
+  elementId: "__single_spa_angular_1",
   strictDi: false,
   template: undefined,
 };
 
 export default function singleSpaAngularJS(userOpts) {
-  if (typeof userOpts !== 'object') {
+  if (typeof userOpts !== "object") {
     throw new Error(`single-spa-angularjs requires a configuration object`);
   }
 
@@ -26,12 +26,16 @@ export default function singleSpaAngularJS(userOpts) {
     throw new Error(`single-spa-angularjs must be passed opts.angular`);
   }
 
-  if (opts.domElementGetter && typeof opts.domElementGetter !== 'function') {
-    throw new Error(`single-spa-angularjs opts.domElementGetter must be a function`);
+  if (opts.domElementGetter && typeof opts.domElementGetter !== "function") {
+    throw new Error(
+      `single-spa-angularjs opts.domElementGetter must be a function`
+    );
   }
 
   if (!opts.mainAngularModule) {
-    throw new Error(`single-spa-angularjs must be passed opts.mainAngularModule string`);
+    throw new Error(
+      `single-spa-angularjs must be passed opts.mainAngularModule string`
+    );
   }
 
   // A shared object to store mounted object state
@@ -49,39 +53,46 @@ function bootstrap(opts) {
 }
 
 function mount(opts, mountedInstances, props = {}) {
-  return Promise
-    .resolve()
-    .then(() => {
-      window.angular = opts.angular;
+  return Promise.resolve().then(() => {
+    window.angular = opts.angular;
 
-      const containerEl = getContainerEl(opts, props);
-      const bootstrapEl = document.createElement('div');
-      bootstrapEl.id = opts.elementId;
+    const containerEl = getContainerEl(opts, props);
+    const bootstrapEl = document.createElement("div");
+    bootstrapEl.id = opts.elementId;
 
-      containerEl.appendChild(bootstrapEl);
+    containerEl.appendChild(bootstrapEl);
 
-      if (opts.uiRouter) {
-        const uiViewEl = document.createElement('div');
-        uiViewEl.setAttribute('ui-view', opts.uiRouter === true ? "" : opts.uiRouter);
-        bootstrapEl.appendChild(uiViewEl);
-      }
+    if (opts.uiRouter) {
+      const uiViewEl = document.createElement("div");
+      uiViewEl.setAttribute(
+        "ui-view",
+        opts.uiRouter === true ? "" : opts.uiRouter
+      );
+      bootstrapEl.appendChild(uiViewEl);
+    }
 
-      if (opts.template) {
-        bootstrapEl.innerHTML = opts.template;
-      }
+    if (opts.template) {
+      bootstrapEl.innerHTML = opts.template;
+    }
 
-      if (opts.strictDi) {
-        mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule], {strictDi: opts.strictDi})
-      } else {
-        mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [opts.mainAngularModule])
-      }
+    if (opts.strictDi) {
+      mountedInstances.instance = opts.angular.bootstrap(
+        bootstrapEl,
+        [opts.mainAngularModule],
+        { strictDi: opts.strictDi }
+      );
+    } else {
+      mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [
+        opts.mainAngularModule,
+      ]);
+    }
   });
 }
 
 function unmount(opts, mountedInstances, props = {}) {
   return new Promise((resolve, reject) => {
-    mountedInstances.instance.get('$rootScope').$destroy();
-    getContainerEl(opts, props).innerHTML = '';
+    mountedInstances.instance.get("$rootScope").$destroy();
+    getContainerEl(opts, props).innerHTML = "";
 
     if (opts.angular === window.angular && !opts.preserveGlobal)
       delete window.angular;
@@ -93,14 +104,14 @@ function unmount(opts, mountedInstances, props = {}) {
 function getContainerEl(opts, props) {
   let element;
   if (opts.domElementGetter) {
-    element = opts.domElementGetter()
+    element = opts.domElementGetter();
   } else {
-    const htmlId = `single-spa-application:${props.name || props.appName}`
-    element = document.getElementById(htmlId)
+    const htmlId = `single-spa-application:${props.name || props.appName}`;
+    element = document.getElementById(htmlId);
     if (!element) {
-      element = document.createElement('div')
-      element.id = htmlId
-      document.body.appendChild(element)
+      element = document.createElement("div");
+      element.id = htmlId;
+      document.body.appendChild(element);
     }
   }
 
