@@ -106,7 +106,7 @@ function unmount(opts, mountedInstances, props = {}) {
 function getContainerEl(opts, props) {
   let element;
   if (opts.domElementGetter) {
-    element = opts.domElementGetter();
+    element = opts.domElementGetter(props);
   } else {
     const htmlId = `single-spa-application:${props.name || props.appName}`;
     element = document.getElementById(htmlId);
