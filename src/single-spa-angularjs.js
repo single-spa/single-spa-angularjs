@@ -26,12 +26,6 @@ export default function singleSpaAngularJS(userOpts) {
     throw new Error(`single-spa-angularjs must be passed opts.angular`);
   }
 
-  if (opts.domElementGetter && typeof opts.domElementGetter !== "function") {
-    throw new Error(
-      `single-spa-angularjs opts.domElementGetter must be a function`
-    );
-  }
-
   if (!opts.mainAngularModule) {
     throw new Error(
       `single-spa-angularjs must be passed opts.mainAngularModule string`
@@ -56,11 +50,12 @@ function mount(opts, mountedInstances, props = {}) {
   return Promise.resolve().then(() => {
     window.angular = opts.angular;
 
-    const containerEl = getContainerEl(opts, props);
+    const domElementGetter = chooseDomElementGetter(opts, props);
+    const domElement = getRootDomEl(domElementGetter, props);
     const bootstrapEl = document.createElement("div");
     bootstrapEl.id = opts.elementId;
 
-    containerEl.appendChild(bootstrapEl);
+    domElement.appendChild(bootstrapEl);
 
     if (opts.uiRouter) {
       const uiViewEl = document.createElement("div");
@@ -94,7 +89,10 @@ function mount(opts, mountedInstances, props = {}) {
 function unmount(opts, mountedInstances, props = {}) {
   return new Promise((resolve, reject) => {
     mountedInstances.instance.get("$rootScope").$destroy();
-    getContainerEl(opts, props).innerHTML = "";
+    const domElementGetter = chooseDomElementGetter(opts, props);
+    const domElement = getRootDomEl(domElementGetter, props);
+
+    domElement.innerHTML = "";
 
     if (opts.angular === window.angular && !opts.preserveGlobal)
       delete window.angular;
@@ -103,22 +101,56 @@ function unmount(opts, mountedInstances, props = {}) {
   });
 }
 
-function getContainerEl(opts, props) {
-  let element;
-  if (opts.domElementGetter) {
-    element = opts.domElementGetter(props);
+function chooseDomElementGetter(opts, props) {
+  if (props.domElement) {
+    return () => props.domElement;
+  } else if (props.domElementGetter) {
+    return props.domElementGetter;
+  } else if (opts.domElementGetter) {
+    return opts.domElementGetter;
   } else {
-    const htmlId = `single-spa-application:${props.name || props.appName}`;
-    element = document.getElementById(htmlId);
-    if (!element) {
-      element = document.createElement("div");
-      element.id = htmlId;
-      document.body.appendChild(element);
+    return defaultDomElementGetter(props);
+  }
+}
+
+function defaultDomElementGetter(props) {
+  const appName = props.appName || props.name;
+  if (!appName) {
+    throw Error(
+      `single-spa-angularjs was not given an application name as a prop, so it can't make a unique dom element container for the angularjs application`
+    );
+  }
+  const htmlId = `single-spa-application:${appName}`;
+
+  return function defaultDomEl() {
+    let domElement = document.getElementById(htmlId);
+    if (!domElement) {
+      domElement = document.createElement("div");
+      domElement.id = htmlId;
+      document.body.appendChild(domElement);
     }
+
+    return domElement;
+  };
+}
+
+function getRootDomEl(domElementGetter, props) {
+  if (typeof domElementGetter !== "function") {
+    throw new Error(
+      `single-spa-angularjs: the domElementGetter for angularjs application '${
+        props.appName || props.name
+      }' is not a function`
+    );
   }
 
+  const element = domElementGetter(props);
+
   if (!element) {
-    throw new Error(`domElementGetter did not return a valid dom element`);
+    throw new Error(
+      `single-spa-angularjs: domElementGetter function for application '${
+        props.appName || props.name
+      }' did not return a valid dom element. Please pass a valid domElement or domElementGetter via opts or props`
+    );
   }
 
   return element;
