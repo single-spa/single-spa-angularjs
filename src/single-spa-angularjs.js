@@ -88,6 +88,12 @@ function mount(opts, mountedInstances, props = {}) {
 
 function unmount(opts, mountedInstances, props = {}) {
   return new Promise((resolve, reject) => {
+    // https://github.com/single-spa/single-spa-angularjs/issues/53
+    const uiRouter = mountedInstances.instance.get("$uiRouter");
+    if (uiRouter) {
+      uiRouter.dispose();
+    }
+
     mountedInstances.instance.get("$rootScope").$destroy();
     const domElementGetter = chooseDomElementGetter(opts, props);
     const domElement = getRootDomEl(domElementGetter, props);
