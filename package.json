@@ -1,6 +1,6 @@
 {
   "name": "single-spa-angularjs",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "the logic needed to register angular 1 apps with single-spa",
   "main": "lib/single-spa-angularjs.js",
   "scripts": {
