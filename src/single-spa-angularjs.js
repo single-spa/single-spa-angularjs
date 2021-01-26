@@ -42,8 +42,18 @@ export default function singleSpaAngularJS(userOpts) {
   };
 }
 
-function bootstrap(opts) {
-  return Promise.resolve();
+function bootstrap(opts, mountedInstances, singleSpaProps) {
+  return Promise.resolve().then(() => {
+    const module = opts.angular.module("single-spa-angularjs");
+    if (module) {
+      module.config([
+        "$provide",
+        ($provide) => {
+          $provide.value("singleSpaProps", singleSpaProps);
+        },
+      ]);
+    }
+  });
 }
 
 function mount(opts, mountedInstances, props = {}) {
