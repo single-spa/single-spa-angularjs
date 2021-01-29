@@ -29,6 +29,9 @@
     "url": "https://github.com/single-spa/single-spa-angularjs/issues"
   },
   "homepage": "https://github.com/single-spa/single-spa-angularjs#readme",
+  "peerDependencies": {
+    "angular": "*"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
