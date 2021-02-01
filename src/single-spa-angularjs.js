@@ -44,7 +44,12 @@ export default function singleSpaAngularJS(userOpts) {
 
 function bootstrap(opts, mountedInstances, singleSpaProps) {
   return Promise.resolve().then(() => {
-    const module = opts.angular.module("single-spa-angularjs");
+    let module;
+    try {
+      module = opts.angular.module("single-spa-angularjs");
+    } catch (err) {
+      // ignore - this means that the module doesn't exist
+    }
     if (module) {
       module.config([
         "$provide",
