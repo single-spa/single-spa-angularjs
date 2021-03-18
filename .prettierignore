@@ -3,3 +3,5 @@
 LICENSE
 yarn.lock
 .npmignore
+lib
+pnpm-lock.yaml

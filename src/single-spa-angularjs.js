@@ -103,10 +103,16 @@ function mount(opts, mountedInstances, props = {}) {
 
 function unmount(opts, mountedInstances, props = {}) {
   return new Promise((resolve, reject) => {
-    // https://github.com/single-spa/single-spa-angularjs/issues/53
-    const uiRouter = mountedInstances.instance.get("$uiRouter");
-    if (uiRouter) {
-      uiRouter.dispose();
+    if (mountedInstances.instance.has("$uiRouter")) {
+      // https://github.com/single-spa/single-spa-angularjs/issues/53
+      const uiRouter = mountedInstances.instance.get("$uiRouter");
+      if (uiRouter.dispose) {
+        uiRouter.dispose();
+      } else {
+        console.warn(
+          "single-spa-angularjs: the uiRouter instance doesn't have a dispose method and so it will not be properly unmounted."
+        );
+      }
     }
 
     mountedInstances.instance.get("$rootScope").$destroy();
