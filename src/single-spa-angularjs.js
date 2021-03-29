@@ -98,6 +98,9 @@ function mount(opts, mountedInstances, props = {}) {
     }
 
     mountedInstances.instance.get("$rootScope").singleSpaProps = props;
+
+    // https://github.com/single-spa/single-spa-angularjs/issues/51
+    mountedInstances.instance.get("$rootScope").$apply();
   });
 }
 
