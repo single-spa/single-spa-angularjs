@@ -6,11 +6,12 @@
   "scripts": {
     "format": "prettier . --write",
     "build": "rimraf lib && babel src --out-dir lib --source-maps",
+    "lint": "eslint src",
     "prepublishOnly": "pnpm run build"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged && pnpm run lint"
     }
   },
   "repository": {
@@ -33,12 +34,15 @@
     "angular": "*"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-transform-modules-umd": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/cli": "^7.14.3",
+    "@babel/core": "^7.14.3",
+    "@babel/eslint-parser": "^7.14.3",
+    "@babel/plugin-transform-modules-umd": "^7.14.0",
+    "@babel/preset-env": "^7.14.2",
+    "eslint": "^7.27.0",
+    "eslint-config-important-stuff": "^1.1.0",
     "husky": "^4.2.5",
-    "prettier": "^2.0.4",
+    "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
     "rimraf": "^3.0.2"
   }
