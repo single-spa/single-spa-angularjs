@@ -6,6 +6,7 @@ const defaultOpts = {
 
   // optional opts
   uiRouter: false,
+  ngRoute: false,
   preserveGlobal: false,
   elementId: "__single_spa_angular_1",
   strictDi: false,
@@ -79,6 +80,14 @@ function mount(opts, mountedInstances, props = {}) {
         opts.uiRouter === true ? "" : opts.uiRouter
       );
       bootstrapEl.appendChild(uiViewEl);
+    }
+
+    if(opts.ngRoute){
+        const ngViewEl = document.createElement("div");
+        ngViewEl.setAttribute(
+            "ng-view",""
+        );
+        bootstrapEl.appendChild(ngViewEl);
     }
 
     if (opts.template) {
