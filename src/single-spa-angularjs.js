@@ -68,7 +68,6 @@ function mount(opts, mountedInstances, props = {}) {
   return Promise.resolve()
     .then(function () {
       const beforePromise = opts.beforePromise || defaultBeforeHook;
-      console.log("running beforePromise");
       return beforePromise();
     })
     .then(() => {
