@@ -63,54 +63,60 @@ function bootstrap(opts, mountedInstances, singleSpaProps) {
 }
 
 function mount(opts, mountedInstances, props = {}) {
-  return Promise.resolve().then(() => {
-    window.angular = opts.angular;
+  const defaultBeforeHook = () => Promise.resolve();
 
-    const domElementGetter = chooseDomElementGetter(opts, props);
-    const domElement = getRootDomEl(domElementGetter, props);
-    const bootstrapEl = document.createElement("div");
-    bootstrapEl.id = opts.elementId;
+  return Promise.resolve()
+    .then(function () {
+      const beforePromise = opts.beforePromise || defaultBeforeHook;
+      console.log("running beforePromise");
+      return beforePromise();
+    })
+    .then(() => {
+      window.angular = opts.angular;
 
-    domElement.appendChild(bootstrapEl);
+      const domElementGetter = chooseDomElementGetter(opts, props);
+      const domElement = getRootDomEl(domElementGetter, props);
+      const bootstrapEl = document.createElement("div");
+      bootstrapEl.id = opts.elementId;
 
-    if (opts.uiRouter) {
-      const uiViewEl = document.createElement("div");
-      uiViewEl.setAttribute(
-        "ui-view",
-        opts.uiRouter === true ? "" : opts.uiRouter
-      );
-      bootstrapEl.appendChild(uiViewEl);
-    }
+      domElement.appendChild(bootstrapEl);
 
-    if(opts.ngRoute){
-        const ngViewEl = document.createElement("div");
-        ngViewEl.setAttribute(
-            "ng-view",""
+      if (opts.uiRouter) {
+        const uiViewEl = document.createElement("div");
+        uiViewEl.setAttribute(
+          "ui-view",
+          opts.uiRouter === true ? "" : opts.uiRouter
         );
+        bootstrapEl.appendChild(uiViewEl);
+      }
+
+      if (opts.ngRoute) {
+        const ngViewEl = document.createElement("div");
+        ngViewEl.setAttribute("ng-view", "");
         bootstrapEl.appendChild(ngViewEl);
-    }
+      }
 
-    if (opts.template) {
-      bootstrapEl.innerHTML = opts.template;
-    }
+      if (opts.template) {
+        bootstrapEl.innerHTML = opts.template;
+      }
 
-    if (opts.strictDi) {
-      mountedInstances.instance = opts.angular.bootstrap(
-        bootstrapEl,
-        [opts.mainAngularModule],
-        { strictDi: opts.strictDi }
-      );
-    } else {
-      mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [
-        opts.mainAngularModule,
-      ]);
-    }
+      if (opts.strictDi) {
+        mountedInstances.instance = opts.angular.bootstrap(
+          bootstrapEl,
+          [opts.mainAngularModule],
+          { strictDi: opts.strictDi }
+        );
+      } else {
+        mountedInstances.instance = opts.angular.bootstrap(bootstrapEl, [
+          opts.mainAngularModule,
+        ]);
+      }
 
-    mountedInstances.instance.get("$rootScope").singleSpaProps = props;
+      mountedInstances.instance.get("$rootScope").singleSpaProps = props;
 
-    // https://github.com/single-spa/single-spa-angularjs/issues/51
-    mountedInstances.instance.get("$rootScope").$apply();
-  });
+      // https://github.com/single-spa/single-spa-angularjs/issues/51
+      mountedInstances.instance.get("$rootScope").$apply();
+    });
 }
 
 function unmount(opts, mountedInstances, props = {}) {
